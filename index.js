@@ -3,15 +3,8 @@ const path = require('path');
 const { chromium } = require('playwright');
 
 var params = require('./data.json');
-var [url, file, fileType] = process.argv.slice(2);
+var [url, fileType] = process.argv.slice(2);
 var fileTypes = ['txt', 'csv'];
-let date_ob = new Date();
-let date = ("0" + date_ob.getDate()).slice(-2);
-let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
-let year = date_ob.getFullYear();
-let hours = date_ob.getHours();
-let minutes = date_ob.getMinutes();
-let seconds = date_ob.getSeconds();
 console.clear();
 console.log(`
 ___________                          
@@ -44,17 +37,24 @@ if (!fileType) {
 	fileType = params.fileType;
 	fileType = fileType.toLowerCase();
 	if (fileTypes.indexOf(fileType) == -1) {
-		console.log('Invalid File Type ' + fileType + '. Please use "txt" or "csv"');
+		console.log('Invalid File Type ' + fileType + '. Please use "txt" or "csv". Using txt.');
 	}
 }
-
+/* Feature -- add timestamp to filename
+let date_ob = new Date();
+let date = ("0" + date_ob.getDate()).slice(-2);
+let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+let year = date_ob.getFullYear();
+let hours = date_ob.getHours();
+let minutes = date_ob.getMinutes();
+let seconds = date_ob.getSeconds();
 if (!file) {
 	file = params.file + "-" + year + "-" + month + "-" + date + "-" + hours + minutes + seconds;
 	console.log('No file name specified, using: '+ file);
 }
+*/
 
 console.log('--=======================================--');
-console.log('using ' + file + "." + fileType + " as output file");
 
 //function to make standard txt file *default behavior
 async function makeTxt(columns, parsedText) {
@@ -125,6 +125,7 @@ async function run() {
   if (!boardTitle) {
     throw 'Board title does not exist. Please check if provided URL is correct.'
   }
+  boardTitle = boardTitle.replace(/\s/g, '');
 
   let parsedText = boardTitle + '\n\n';
 
@@ -139,7 +140,7 @@ async function run() {
 	  parsedText = makeCsv(columns,parsedText);
     break;
   }
-  file = file + "." + fileType;
+  file = boardTitle + "." + fileType;
   return parsedText;
 }
 
