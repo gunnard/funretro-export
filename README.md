@@ -12,8 +12,13 @@ It's required to have [npm](https://www.npmjs.com/get-npm) installed locally to 
 git clone https://github.com/julykaz/funretro-export.git
 cd funretro-export
 npm install
-npm start -- "http://funretro.io/board..." "../exported-file" "csv|txt"
+Usage: npm start -- "url" "filename" "filetype"                                    
+leave option "" for default if needed                                              
+FileTypes: 1) txt (default)                                                        
+           2) csv                                                                  
+Default values are found in -> data.json <-
 ```
+
 
 ## TODO
 
