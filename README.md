@@ -12,7 +12,7 @@ It's required to have [npm](https://www.npmjs.com/get-npm) installed locally to 
 git clone https://github.com/julykaz/funretro-export.git
 cd funretro-export
 npm install
-npm start -- "http://funretro.io/board..." "../exported-file.txt"
+npm start -- "http://funretro.io/board..." "../exported-file" "csv|txt"
 ```
 
 ## TODO

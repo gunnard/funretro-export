@@ -34,6 +34,7 @@ console.log('           2) csv');
 console.log('Default values are found in -> data.json <-');
 console.log('--=======================================--');
 
+//Check for url, filetype and file. Read from data.json if not given
 if (!url) {
 	url = params.url;
 	console.log('No URL specified, using: ' + url);
@@ -55,11 +56,10 @@ if (!file) {
 console.log('--=======================================--');
 console.log('using ' + file + "." + fileType + " as output file");
 
-//process.exit();
-async function makeTxt(columns,parsedText) {
+//function to make standard txt file *default behavior
+async function makeTxt(columns, parsedText) {
   for (let i = 0; i < columns.length; i++) {
     const columnTitle = await columns[i].$eval('.column-header', (node) => node.innerText.trim());
-
     const messages = await columns[i].$$('.message-main');
     if (messages.length) {
       parsedText += columnTitle + '\n';
@@ -71,20 +71,48 @@ async function makeTxt(columns,parsedText) {
       parsedText += `- ${messageText} (${votes})` + '\n';
 	  }
     }
-
     if (messages.length) {
       parsedText += '\n';
     }
   }
-  console.log("------------------------------");
-  console.log(parsedText);
-  console.log("------------------------------");
   return parsedText;
 }
 
-function makeCsv() {
-	console.log('CSV FILE');
+//function to create csv
+async function makeCsv(columns, parsedText) {
+  //loop through columns for titles.
+  var columnTitle = "";
+  var allColumnTitles = "";
+  for (let i = 0; i < columns.length; i++) {
+    columnTitle = await columns[i].$eval('.column-header', (node) => node.innerText.trim());
+	if (typeof columnTitle != "undefined") {
+		allColumnTitles += columnTitle + ',';
+	}
+  }
+  allColumnTitles = allColumnTitles.slice(0, -1);
+  allColumnTitles += '\n';
+
+  //loop through columns for messages
+  var columnMessages = "";
+
+  for (let i = 0; i < columns.length; i++) {
+    const messages = await columns[i].$$('.message-main');
+
+    for (let i = 0; i < messages.length; i++) {
+      const votes = await messages[i].$eval('.votes .vote-area span.show-vote-count', (node) => node.innerText.trim());
+
+	  if (votes > 0) {
+        const messageText = await messages[i].$eval('.message-body .text', (node) => node.innerText.trim());
+        columnMessages += `- ${messageText} (${votes}) `;
+	  }
+    }
+	columnMessages += ',';
+  }
+  parsedText = allColumnTitles + '\n' + columnMessages;
+  return parsedText;
 }
+
+//main function
 async function run() {
   const browser = await chromium.launch();
   const page = await browser.newPage();
@@ -105,11 +133,10 @@ async function run() {
   switch(fileType) {
 	case 'txt':
 	  parsedText = makeTxt(columns,parsedText);
-	  console.log(parsedText);
     break;
 
 	case 'csv':
-	  parsedText += makeCsv();
+	  parsedText = makeCsv(columns,parsedText);
     break;
   }
   file = file + "." + fileType;
