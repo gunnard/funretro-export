@@ -29,8 +29,8 @@ __________        __
 
 console.log('Usage: npm start -- "url" "filename" "filetype"');
 console.log('leave option "" for default if needed');
-console.log('FileTypes: 1) txt (default)');
-console.log('           2) csv');
+console.log('FileTypes: txt (default)');
+console.log('           csv');
 console.log('Default values are found in -> data.json <-');
 console.log('--=======================================--');
 
