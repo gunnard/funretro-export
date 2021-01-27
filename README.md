@@ -14,8 +14,8 @@ cd funretro-export
 npm install
 Usage: npm start -- "url" "filename" "filetype"                                    
 leave option "" for default if needed                                              
-FileTypes: 1) txt (default)                                                        
-           2) csv                                                                  
+FileTypes: txt (default)                                                        
+           csv                                                                  
 Default values are found in -> data.json <-
 ```
 
